@@ -37,12 +37,12 @@
 
 install.packages("gen3sis")
 
-### [] download data --------
+### [X] download data --------
 
 
-### [] store it into working directory ------------
+### [X] store it into working directory ------------
 
-### [] source.R ------------
+### [X] source.R ------------
 source("./source.R")
 ### [] Reflection --------
 ### [] Questions: Sourcing, WD, relative and absolute paths clear?

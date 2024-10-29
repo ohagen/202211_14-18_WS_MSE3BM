@@ -27,7 +27,7 @@ area=Area (Km2)
 
 Cost function: 
 - 1/1000 land
-- 2/2000 to water
+- 2/1000 to water
 
 Source Data:
 

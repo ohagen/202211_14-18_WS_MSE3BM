@@ -34,8 +34,8 @@ end_of_timestep_observer = function(data, vars, config){
   plot_richness(data$all_species, data$landscape)
   plot_species_presence(data$all_species[[1]], data$landscape)
   #save
-  # save_species()
-  # save_landscape()
+  save_species()
+  save_landscape()
 }
 
 
@@ -79,7 +79,7 @@ get_dispersal_values <- function(n, species, landscape, config) {
 ### Speciation ###
 ##################
 # threshold for genetic distance after which a speciation event takes place
-divergence_threshold =2
+divergence_threshold=5
 
 # factor by which the divergence is increased between geographicaly isolated population
 # can also be a matrix between the different population clusters
@@ -93,29 +93,29 @@ get_divergence_factor <- function(species, cluster_indices, landscape, config) {
 ################
 # mutate the traits of a species and return the new traits matrix
 apply_evolution <- function(species, cluster_indices, landscape, config) {
-  trait_evolutionary_power <-0.085 ### VARY
+  # trait_evolutionary_power <-0.085 ### VARY
   traits <- species[["traits"]]
-  cells <- rownames(traits)
-  #homogenize trait based on abundance
-  for(cluster_index in unique(cluster_indices)){
-    # cluster_index <- 1
-    cells_cluster <- cells[which(cluster_indices == cluster_index)]
-    # hist(traits[cells_cluster, "temp"], main="before")
-    mean_abd <- mean(species$abundance[cells_cluster])
-    weight_abd <- species$abundance[cells_cluster]/mean_abd
-    traits[cells_cluster, "temp"] <- mean(traits[cells_cluster, "temp"]*weight_abd)
-    # hist(traits[cells_cluster, "temp"], main="after")
-  }
-  #mutations
-  mutation_deltas <-rnorm(length(traits[, "temp"]), mean=0, sd=trait_evolutionary_power)
-  traits[, "temp"] <- traits[, "temp"] + mutation_deltas
-  mutation_deltas <-rnorm(length(traits[, "foss"]), mean=0, sd=trait_evolutionary_power)
-  traits[, "foss"] <- traits[, "foss"] + mutation_deltas
-  # rang between 0 and 1
-  tf <- traits[,"foss"]
-  tf[tf>1] <- 1
-  tf[tf<0] <- 0
-  traits[,"foss"] <- tf
+  # cells <- rownames(traits)
+  # #homogenize trait based on abundance
+  # for(cluster_index in unique(cluster_indices)){
+  #   # cluster_index <- 1
+  #   cells_cluster <- cells[which(cluster_indices == cluster_index)]
+  #   # hist(traits[cells_cluster, "temp"], main="before")
+  #   mean_abd <- mean(species$abundance[cells_cluster])
+  #   weight_abd <- species$abundance[cells_cluster]/mean_abd
+  #   traits[cells_cluster, "temp"] <- mean(traits[cells_cluster, "temp"]*weight_abd)
+  #   # hist(traits[cells_cluster, "temp"], main="after")
+  # }
+  # #mutations
+  # mutation_deltas <-rnorm(length(traits[, "temp"]), mean=0, sd=trait_evolutionary_power)
+  # traits[, "temp"] <- traits[, "temp"] + mutation_deltas
+  # mutation_deltas <-rnorm(length(traits[, "foss"]), mean=0, sd=trait_evolutionary_power)
+  # traits[, "foss"] <- traits[, "foss"] + mutation_deltas
+  # # rang between 0 and 1
+  # tf <- traits[,"foss"]
+  # tf[tf>1] <- 1
+  # tf[tf<0] <- 0
+  # traits[,"foss"] <- tf
   return(traits)
 }
 
@@ -132,13 +132,17 @@ apply_ecology <- function(abundance, traits, landscape, config, abundance_scale 
   #   v <- (a/c)*exp(-((x-b)^2/(2*c^2)))
   #   return(v)
   # }
-  # # 
-  # plot(fg(x=seq(0,1,0.01), a=10, b=0.5, c=0.005), type='l') # c ranges from 0.001 to 0.3 (very wide niche)
+  # #
+  # plot(fg(x=0, a=10, b=seq(-50,50,1), c=5), type='l') # c ranges from 0.001 to 0.3 (very wide niche)
   # # abline(h=1)
   
   # gaussian
-  abundance <- (abundance_scale*exp(-((traits[, "temp"] - landscape[, "temp"])**2/(traits[,"niche_wd"]**2))))*(landscape[,"arid"])
-  #abundance thhreashold
-  abundance[abundance<abundance_threshold] <- 0
+  
+  
+  
+  # abundance <- ((abundance_scale/traits[,"niche_wd"])*exp(-((traits[, "temp"] - landscape[, "temp"])**2/(traits[,"niche_wd"]**2))))*(landscape[,"arid"])
+  # #abundance thhreashold
+  # abundance[abundance<abundance_threshold] <- 0
+  
   return(abundance)
 }
